@@ -176,6 +176,202 @@ def list_packages(device_id: str = "", system_apps: bool = False) -> str:
     except Exception as e:
         return f"列出应用包时发生错误: {str(e)}"
 
+
+@mcp.tool()
+def start_app(package_name: str, activity: str = "", device_id: str = "") -> str:
+    """启动应用。
+
+    Args:
+        package_name (str): 应用包名。
+        activity (str): Activity名称（可选）。为空则使用monkey启动主Activity。
+        device_id (str): 设备 ID；留空时使用默认/首个设备。
+
+    Returns:
+        str: 启动结果。
+    """
+    try:
+        device_id_param = device_id if device_id else None
+        success, stdout, stderr = ADBHelper.start_app(package_name, activity, device_id_param)
+
+        if success:
+            return f"✅ 应用启动成功\n包名: {package_name}\n设备: {device_id or '默认设备'}"
+        else:
+            return f"❌ 应用启动失败\n错误: {stderr}"
+
+    except Exception as e:
+        return f"启动应用时发生错误: {str(e)}"
+
+
+@mcp.tool()
+def stop_app(package_name: str, device_id: str = "") -> str:
+    """强制停止应用。
+
+    Args:
+        package_name (str): 应用包名。
+        device_id (str): 设备 ID；留空时使用默认/首个设备。
+
+    Returns:
+        str: 停止结果。
+    """
+    try:
+        device_id_param = device_id if device_id else None
+        success, stdout, stderr = ADBHelper.stop_app(package_name, device_id_param)
+
+        if success:
+            return f"✅ 应用已停止\n包名: {package_name}\n设备: {device_id or '默认设备'}"
+        else:
+            return f"❌ 停止应用失败\n错误: {stderr}"
+
+    except Exception as e:
+        return f"停止应用时发生错误: {str(e)}"
+
+
+@mcp.tool()
+def clear_app_data(package_name: str, device_id: str = "") -> str:
+    """清除应用数据和缓存。
+
+    Args:
+        package_name (str): 应用包名。
+        device_id (str): 设备 ID；留空时使用默认/首个设备。
+
+    Returns:
+        str: 清除结果。
+    """
+    try:
+        device_id_param = device_id if device_id else None
+        success, stdout, stderr = ADBHelper.clear_app_data(package_name, device_id_param)
+
+        if success:
+            return f"✅ 应用数据已清除\n包名: {package_name}\n设备: {device_id or '默认设备'}"
+        else:
+            return f"❌ 清除应用数据失败\n错误: {stderr}"
+
+    except Exception as e:
+        return f"清除应用数据时发生错误: {str(e)}"
+
+
+@mcp.tool()
+def get_current_activity(device_id: str = "") -> str:
+    """获取当前前台Activity。
+
+    Args:
+        device_id (str): 设备 ID；留空时使用默认/首个设备。
+
+    Returns:
+        str: 当前Activity信息。
+    """
+    try:
+        device_id_param = device_id if device_id else None
+        success, stdout, stderr = ADBHelper.get_current_activity(device_id_param)
+
+        if success:
+            return f"当前Activity:\n{stdout}\n设备: {device_id or '默认设备'}"
+        else:
+            return f"❌ 获取当前Activity失败\n错误: {stderr}"
+
+    except Exception as e:
+        return f"获取当前Activity时发生错误: {str(e)}"
+
+
+@mcp.tool()
+def get_app_path(package_name: str, device_id: str = "") -> str:
+    """获取应用安装路径。
+
+    Args:
+        package_name (str): 应用包名。
+        device_id (str): 设备 ID；留空时使用默认/首个设备。
+
+    Returns:
+        str: 应用安装路径。
+    """
+    try:
+        device_id_param = device_id if device_id else None
+        success, stdout, stderr = ADBHelper.get_app_path(package_name, device_id_param)
+
+        if success:
+            return f"应用路径:\n{stdout}\n设备: {device_id or '默认设备'}"
+        else:
+            return f"❌ 获取应用路径失败\n错误: {stderr}"
+
+    except Exception as e:
+        return f"获取应用路径时发生错误: {str(e)}"
+
+
+@mcp.tool()
+def get_app_uid(package_name: str, device_id: str = "") -> str:
+    """获取应用UID。
+
+    Args:
+        package_name (str): 应用包名。
+        device_id (str): 设备 ID；留空时使用默认/首个设备。
+
+    Returns:
+        str: 应用UID信息。
+    """
+    try:
+        device_id_param = device_id if device_id else None
+        success, stdout, stderr = ADBHelper.get_app_uid(package_name, device_id_param)
+
+        if success:
+            return f"应用UID:\n{stdout}\n设备: {device_id or '默认设备'}"
+        else:
+            return f"❌ 获取应用UID失败\n错误: {stderr}"
+
+    except Exception as e:
+        return f"获取应用UID时发生错误: {str(e)}"
+
+
+@mcp.tool()
+def get_pid(package_name: str, device_id: str = "") -> str:
+    """获取应用进程PID。
+
+    Args:
+        package_name (str): 应用包名。
+        device_id (str): 设备 ID；留空时使用默认/首个设备。
+
+    Returns:
+        str: 应用PID。
+    """
+    try:
+        device_id_param = device_id if device_id else None
+        success, stdout, stderr = ADBHelper.get_pid(package_name, device_id_param)
+
+        if success and stdout.strip():
+            return f"PID: {stdout.strip()}\n包名: {package_name}\n设备: {device_id or '默认设备'}"
+        else:
+            return f"❌ 获取PID失败，应用可能未运行\n包名: {package_name}"
+
+    except Exception as e:
+        return f"获取PID时发生错误: {str(e)}"
+
+
+@mcp.tool()
+def get_app_logcat(package_name: str, lines: int = 100, device_id: str = "") -> str:
+    """获取指定应用的日志。
+
+    Args:
+        package_name (str): 应用包名。
+        lines (int): 显示日志行数，默认100行。
+        device_id (str): 设备 ID；留空时使用默认/首个设备。
+
+    Returns:
+        str: 应用日志。
+    """
+    try:
+        device_id_param = device_id if device_id else None
+        success, stdout, stderr = ADBHelper.get_app_logcat(package_name, lines, device_id_param)
+
+        if success:
+            if not stdout.strip():
+                return f"没有找到 {package_name} 的日志"
+            return f"应用日志 ({package_name}):\n行数: {lines}\n设备: {device_id or '默认设备'}\n\n{stdout}"
+        else:
+            return f"❌ 获取应用日志失败\n错误: {stderr}"
+
+    except Exception as e:
+        return f"获取应用日志时发生错误: {str(e)}"
+
+
 # ==================== 文件传输工具 ====================
 
 @mcp.tool()
@@ -355,6 +551,122 @@ def get_storage_info(device_id: str = "") -> str:
 
     except Exception as e:
         return f"获取存储信息时发生错误: {str(e)}"
+
+
+@mcp.tool()
+def get_android_id(device_id: str = "") -> str:
+    """获取设备的android_id。
+
+    Args:
+        device_id (str): 设备 ID；留空时使用默认/首个设备。
+
+    Returns:
+        str: android_id。
+    """
+    try:
+        device_id_param = device_id if device_id else None
+        success, stdout, stderr = ADBHelper.get_android_id(device_id_param)
+
+        if success:
+            return f"Android ID: {stdout}\n设备: {device_id or '默认设备'}"
+        else:
+            return f"❌ 获取Android ID失败\n错误: {stderr}"
+
+    except Exception as e:
+        return f"获取Android ID时发生错误: {str(e)}"
+
+
+@mcp.tool()
+def get_screen_size(device_id: str = "") -> str:
+    """获取设备屏幕尺寸。
+
+    Args:
+        device_id (str): 设备 ID；留空时使用默认/首个设备。
+
+    Returns:
+        str: 屏幕尺寸信息。
+    """
+    try:
+        device_id_param = device_id if device_id else None
+        success, stdout, stderr = ADBHelper.get_screen_size(device_id_param)
+
+        if success:
+            return f"屏幕尺寸:\n{stdout}\n设备: {device_id or '默认设备'}"
+        else:
+            return f"❌ 获取屏幕尺寸失败\n错误: {stderr}"
+
+    except Exception as e:
+        return f"获取屏幕尺寸时发生错误: {str(e)}"
+
+
+@mcp.tool()
+def get_screen_density(device_id: str = "") -> str:
+    """获取设备屏幕密度。
+
+    Args:
+        device_id (str): 设备 ID；留空时使用默认/首个设备。
+
+    Returns:
+        str: 屏幕密度信息。
+    """
+    try:
+        device_id_param = device_id if device_id else None
+        success, stdout, stderr = ADBHelper.get_screen_density(device_id_param)
+
+        if success:
+            return f"屏幕密度:\n{stdout}\n设备: {device_id or '默认设备'}"
+        else:
+            return f"❌ 获取屏幕密度失败\n错误: {stderr}"
+
+    except Exception as e:
+        return f"获取屏幕密度时发生错误: {str(e)}"
+
+
+@mcp.tool()
+def get_ip_address(device_id: str = "") -> str:
+    """获取设备IP地址。
+
+    Args:
+        device_id (str): 设备 ID；留空时使用默认/首个设备。
+
+    Returns:
+        str: IP地址信息。
+    """
+    try:
+        device_id_param = device_id if device_id else None
+        success, stdout, stderr = ADBHelper.get_ip_address(device_id_param)
+
+        if success:
+            return f"IP地址信息:\n{stdout}\n设备: {device_id or '默认设备'}"
+        else:
+            return f"❌ 获取IP地址失败\n错误: {stderr}"
+
+    except Exception as e:
+        return f"获取IP地址时发生错误: {str(e)}"
+
+
+@mcp.tool()
+def get_mac_address(device_id: str = "") -> str:
+    """获取设备MAC地址。
+
+    Args:
+        device_id (str): 设备 ID；留空时使用默认/首个设备。
+
+    Returns:
+        str: MAC地址。
+    """
+    try:
+        device_id_param = device_id if device_id else None
+        success, stdout, stderr = ADBHelper.get_mac_address(device_id_param)
+
+        if success:
+            return f"MAC地址: {stdout}\n设备: {device_id or '默认设备'}"
+        else:
+            return f"❌ 获取MAC地址失败\n错误: {stderr}"
+
+    except Exception as e:
+        return f"获取MAC地址时发生错误: {str(e)}"
+
 
 # ==================== 屏幕操作工具 ====================
 
@@ -576,6 +888,209 @@ def clear_logcat(device_id: str = "") -> str:
 
     except Exception as e:
         return f"清除日志时发生错误: {str(e)}"
+
+# ==================== Shell 工具 ====================
+
+@mcp.tool()
+def shell(command: str, device_id: str = "", timeout: int = 30) -> str:
+    """在设备上执行 shell 命令。
+
+    Args:
+        command (str): 要执行的 shell 命令。
+        device_id (str): 设备 ID；留空时使用默认/首个设备。
+        timeout (int): 命令超时时间（秒），默认 30 秒。
+
+    Returns:
+        str: 命令执行结果。
+    """
+    try:
+        device_id_param = device_id if device_id else None
+        success, stdout, stderr = ADBHelper.shell(command, device_id_param, timeout)
+
+        if success:
+            output = stdout if stdout else "(无输出)"
+            return f"✅ 命令执行成功\n命令: {command}\n设备: {device_id or '默认设备'}\n\n输出:\n{output}"
+        else:
+            return f"❌ 命令执行失败\n命令: {command}\n错误: {stderr}"
+
+    except Exception as e:
+        return f"执行 shell 命令时发生错误: {str(e)}"
+
+@mcp.tool()
+def shell_root(command: str, su_binary: str = "su", device_id: str = "", timeout: int = 30) -> str:
+    """以 root 权限在设备上执行 shell 命令。
+
+    Args:
+        command (str): 要执行的 shell 命令。
+        su_binary (str): su 二进制文件名，如 "su", "sx" 等，默认 "su"。
+        device_id (str): 设备 ID；留空时使用默认/首个设备。
+        timeout (int): 命令超时时间（秒），默认 30 秒。
+
+    Returns:
+        str: 命令执行结果。
+    """
+    try:
+        device_id_param = device_id if device_id else None
+        success, stdout, stderr = ADBHelper.shell_root(command, su_binary, device_id_param, timeout)
+
+        if success:
+            output = stdout if stdout else "(无输出)"
+            return f"✅ Root 命令执行成功\n命令: {command}\nSU: {su_binary}\n设备: {device_id or '默认设备'}\n\n输出:\n{output}"
+        else:
+            return f"❌ Root 命令执行失败\n命令: {command}\n错误: {stderr}\n\n提示: 请确保设备已 root 且已授权 shell 的 root 权限"
+
+    except Exception as e:
+        return f"执行 root shell 命令时发生错误: {str(e)}"
+
+# ==================== 端口转发工具 ====================
+
+@mcp.tool()
+def forward_port(local_port: int, remote_port: int, device_id: str = "") -> str:
+    """端口转发（本地端口转发到设备端口）。
+
+    Args:
+        local_port (int): 本地端口。
+        remote_port (int): 设备端口。
+        device_id (str): 设备 ID；留空时使用默认/首个设备。
+
+    Returns:
+        str: 转发结果。
+    """
+    try:
+        device_id_param = device_id if device_id else None
+        success, stdout, stderr = ADBHelper.forward_port(local_port, remote_port, device_id_param)
+
+        if success:
+            return f"✅ 端口转发成功\n本地端口 {local_port} -> 设备端口 {remote_port}\n设备: {device_id or '默认设备'}"
+        else:
+            return f"❌ 端口转发失败\n错误: {stderr}"
+
+    except Exception as e:
+        return f"端口转发时发生错误: {str(e)}"
+
+
+@mcp.tool()
+def forward_remove(local_port: int, device_id: str = "") -> str:
+    """移除端口转发。
+
+    Args:
+        local_port (int): 本地端口。
+        device_id (str): 设备 ID；留空时使用默认/首个设备。
+
+    Returns:
+        str: 移除结果。
+    """
+    try:
+        device_id_param = device_id if device_id else None
+        success, stdout, stderr = ADBHelper.forward_remove(local_port, device_id_param)
+
+        if success:
+            return f"✅ 端口转发已移除\n本地端口: {local_port}\n设备: {device_id or '默认设备'}"
+        else:
+            return f"❌ 移除端口转发失败\n错误: {stderr}"
+
+    except Exception as e:
+        return f"移除端口转发时发生错误: {str(e)}"
+
+
+@mcp.tool()
+def forward_list(device_id: str = "") -> str:
+    """列出所有端口转发。
+
+    Args:
+        device_id (str): 设备 ID；留空时使用默认/首个设备。
+
+    Returns:
+        str: 端口转发列表。
+    """
+    try:
+        device_id_param = device_id if device_id else None
+        success, stdout, stderr = ADBHelper.forward_list(device_id_param)
+
+        if success:
+            if not stdout.strip():
+                return "没有活动的端口转发"
+            return f"端口转发列表:\n{stdout}\n设备: {device_id or '默认设备'}"
+        else:
+            return f"❌ 获取端口转发列表失败\n错误: {stderr}"
+
+    except Exception as e:
+        return f"获取端口转发列表时发生错误: {str(e)}"
+
+
+@mcp.tool()
+def reverse_port(remote_port: int, local_port: int, device_id: str = "") -> str:
+    """反向端口转发（设备端口转发到本地端口）。
+
+    Args:
+        remote_port (int): 设备端口。
+        local_port (int): 本地端口。
+        device_id (str): 设备 ID；留空时使用默认/首个设备。
+
+    Returns:
+        str: 转发结果。
+    """
+    try:
+        device_id_param = device_id if device_id else None
+        success, stdout, stderr = ADBHelper.reverse_port(remote_port, local_port, device_id_param)
+
+        if success:
+            return f"✅ 反向端口转发成功\n设备端口 {remote_port} -> 本地端口 {local_port}\n设备: {device_id or '默认设备'}"
+        else:
+            return f"❌ 反向端口转发失败\n错误: {stderr}"
+
+    except Exception as e:
+        return f"反向端口转发时发生错误: {str(e)}"
+
+
+@mcp.tool()
+def reverse_remove(remote_port: int, device_id: str = "") -> str:
+    """移除反向端口转发。
+
+    Args:
+        remote_port (int): 设备端口。
+        device_id (str): 设备 ID；留空时使用默认/首个设备。
+
+    Returns:
+        str: 移除结果。
+    """
+    try:
+        device_id_param = device_id if device_id else None
+        success, stdout, stderr = ADBHelper.reverse_remove(remote_port, device_id_param)
+
+        if success:
+            return f"✅ 反向端口转发已移除\n设备端口: {remote_port}\n设备: {device_id or '默认设备'}"
+        else:
+            return f"❌ 移除反向端口转发失败\n错误: {stderr}"
+
+    except Exception as e:
+        return f"移除反向端口转发时发生错误: {str(e)}"
+
+
+@mcp.tool()
+def reverse_list(device_id: str = "") -> str:
+    """列出所有反向端口转发。
+
+    Args:
+        device_id (str): 设备 ID；留空时使用默认/首个设备。
+
+    Returns:
+        str: 反向端口转发列表。
+    """
+    try:
+        device_id_param = device_id if device_id else None
+        success, stdout, stderr = ADBHelper.reverse_list(device_id_param)
+
+        if success:
+            if not stdout.strip():
+                return "没有活动的反向端口转发"
+            return f"反向端口转发列表:\n{stdout}\n设备: {device_id or '默认设备'}"
+        else:
+            return f"❌ 获取反向端口转发列表失败\n错误: {stderr}"
+
+    except Exception as e:
+        return f"获取反向端口转发列表时发生错误: {str(e)}"
+
 
 def main():
     """主函数"""
