@@ -1,6 +1,6 @@
 # ADB MCP Server
 
-Android Debug Bridge (ADB) 的 MCP 服务器，提供完整的 Android 设备管理能力。
+Android Debug Bridge (ADB) 的 MCP 服务器，提供完整的 Android 设备管理能力。原理很简单，调用电脑的adb命令，然后封装了一些常见的功能；
 
 ## 功能特性
 
@@ -24,19 +24,15 @@ Android Debug Bridge (ADB) 的 MCP 服务器，提供完整的 Android 设备管
 ## 安装
 
 ```bash
-git clone https://github.com/zhizhuodemao/adb-mcp
+git clone https://github.com/LunFengChen/adb-mcp
 cd adb-mcp
 pip install -r requirements.txt
 ```
 
 ## 使用
 
-### 启动服务器
-```bash
-python fastmcp_server.py
-```
-
-### MCP 配置示例
+### 1. 在ide中配置mcp
+autoApprove在某些ide是需要的，不然每次调用都需要审批；
 
 ```json
 "adb-mcp": {
