@@ -1,127 +1,135 @@
 # ADB MCP Server
 
-A comprehensive Model Context Protocol (MCP) server for Android Debug Bridge (ADB) operations, providing complete Android device management capabilities.
+Android Debug Bridge (ADB) 的 MCP 服务器，提供完整的 Android 设备管理能力。
 
 ## 功能特性
 
 - **设备管理**: 列出设备、获取设备信息
-- **应用管理**: 安装、卸载、列出应用包
+- **应用管理**: 安装、卸载、启动、停止、清除数据、获取路径/UID/PID
 - **文件传输**: 推送、拉取、列出文件
-- **系统信息**: 电池、内存、存储状态
+- **系统信息**: 电池、内存、存储、屏幕尺寸/密度、Android ID、IP/MAC地址
 - **屏幕操作**: 截屏、录屏
 - **输入模拟**: 文本输入、按键、点击、滑动
-- **日志调试**: 获取、清除设备日志
+- **日志调试**: 获取设备日志、应用日志、清除日志
+- **端口转发**: forward/reverse 端口转发（Frida/调试常用）
+- **Shell命令**: 普通shell和root shell执行
 - **多设备支持**: 同时管理多个Android设备
-- **完整错误处理**: 详细的错误信息和故障排除
 
-## Prerequisites
+## 环境要求
 
-1. **Android SDK Platform Tools**: Ensure `adb` command is available in your PATH
-2. **Python 3.10+**: Required for MCP server
-3. **Android Device**: Connected via USB with USB debugging enabled
+1. **Android SDK Platform Tools**: 确保 `adb` 命令在 PATH 中
+2. **Python 3.10+**
+3. **Android 设备**: USB连接并开启USB调试
 
-## Installation
+## 安装
 
 ```bash
-# Clone the repository
 git clone https://github.com/zhizhuodemao/adb-mcp
 cd adb-mcp
-
-# Install dependencies
 pip install -r requirements.txt
 ```
 
-## Usage
+## 使用
 
-### Start the MCP Server
+### 启动服务器
 ```bash
-python server.py
+python fastmcp_server.py
 ```
 
-### Using with MCP Inspector (Development)
-```bash
-mcp dev server.py
+### MCP 配置示例
+
+```json
+"adb-mcp": {
+  "command": "python",
+  "args": ["path/to/fastmcp_server.py"],
+  "disabled": false,
+  "autoApprove": [
+    "list_devices", "get_device_info", "install_app", "uninstall_app",
+    "list_packages", "start_app", "stop_app", "clear_app_data",
+    "get_current_activity", "get_app_path", "get_app_uid", "get_pid",
+    "get_app_logcat", "push_file", "pull_file", "list_files",
+    "get_battery_info", "get_memory_info", "get_storage_info",
+    "get_android_id", "get_screen_size", "get_screen_density",
+    "get_ip_address", "get_mac_address", "take_screenshot", "record_screen",
+    "send_text", "send_keyevent", "send_tap", "send_swipe",
+    "get_logcat", "clear_logcat", "shell", "shell_root",
+    "forward_port", "forward_remove", "forward_list",
+    "reverse_port", "reverse_remove", "reverse_list"
+  ]
+}
 ```
 
-### 可用工具
+## 工具列表 (40个)
 
-#### 设备管理
-1. **list_devices** - 列出所有连接的Android设备
-2. **get_device_info** - 获取设备详细信息
+### 设备管理 (2)
+- `list_devices` - 列出连接的设备
+- `get_device_info` - 获取设备详细信息
 
-#### 应用管理
-3. **install_app** - 安装APK应用到设备
-4. **uninstall_app** - 卸载设备上的应用
-5. **list_packages** - 列出已安装的应用包
+### 应用管理 (11)
+- `install_app` - 安装APK
+- `uninstall_app` - 卸载应用
+- `list_packages` - 列出已安装应用
+- `start_app` - 启动应用
+- `stop_app` - 强制停止应用
+- `clear_app_data` - 清除应用数据
+- `get_current_activity` - 获取当前前台Activity
+- `get_app_path` - 获取应用安装路径
+- `get_app_uid` - 获取应用UID
+- `get_pid` - 获取应用PID
+- `get_app_logcat` - 获取指定应用日志
 
-#### 文件传输
-6. **push_file** - 推送文件到设备
-7. **pull_file** - 从设备拉取文件
-8. **list_files** - 列出设备上的文件和目录
+### 文件传输 (3)
+- `push_file` - 推送文件到设备
+- `pull_file` - 从设备拉取文件
+- `list_files` - 列出设备文件
 
-#### 系统信息
-9. **get_battery_info** - 获取电池状态信息
-10. **get_memory_info** - 获取内存使用情况
-11. **get_storage_info** - 获取存储空间信息
+### 系统信息 (9)
+- `get_battery_info` - 电池信息
+- `get_memory_info` - 内存信息
+- `get_storage_info` - 存储信息
+- `get_android_id` - Android ID
+- `get_screen_size` - 屏幕尺寸
+- `get_screen_density` - 屏幕密度
+- `get_ip_address` - IP地址
+- `get_mac_address` - MAC地址
 
-#### 屏幕操作
-12. **take_screenshot** - 截取设备屏幕（需要提供save_path）
-13. **record_screen** - 录制设备屏幕
+### 屏幕操作 (2)
+- `take_screenshot` - 截屏
+- `record_screen` - 录屏
 
-#### 输入模拟
-14. **send_text** - 发送文本输入
-15. **send_keyevent** - 发送按键事件
-16. **send_tap** - 发送点击事件
-17. **send_swipe** - 发送滑动事件
+### 输入模拟 (4)
+- `send_text` - 发送文本
+- `send_keyevent` - 发送按键
+- `send_tap` - 发送点击
+- `send_swipe` - 发送滑动
 
-#### 日志调试
-18. **get_logcat** - 获取设备日志
-19. **clear_logcat** - 清除设备日志
+### 日志调试 (2)
+- `get_logcat` - 获取日志
+- `clear_logcat` - 清除日志
 
-## 开发调试
+### Shell命令 (2)
+- `shell` - 执行shell命令
+- `shell_root` - 以root权限执行（支持自定义su，如sx）
 
-### 测试ADB连接
-```bash
-adb devices
-```
+### 端口转发 (6)
+- `forward_port` - 端口转发 (本地→设备)
+- `forward_remove` - 移除端口转发
+- `forward_list` - 列出端口转发
+- `reverse_port` - 反向端口转发 (设备→本地)
+- `reverse_remove` - 移除反向端口转发
+- `reverse_list` - 列出反向端口转发
 
-### 查看日志
-服务器会输出详细的调试日志，包括工具调用和错误信息。
+## 常用按键代码
 
-### 使用MCP Inspector测试
-```bash
-# 安装后使用MCP Inspector测试
-uv run mcp dev run_server.py
-```
-
-## 扩展开发
-
-要添加新的ADB工具：
-
-1. 在 `src/tools/` 目录下创建新的工具模块
-2. 在工具类中实现 `get_tools()` 和 `handle_tool_call()` 方法
-3. 在 `src/server.py` 中注册新的工具处理器
+| 代码 | 按键 | 代码 | 按键 |
+|-----|------|-----|------|
+| 3 | Home | 4 | 返回 |
+| 24 | 音量+ | 25 | 音量- |
+| 26 | 电源 | 66 | 回车 |
+| 67 | 删除 | 82 | 菜单 |
 
 ## 故障排除
 
-1. **ADB not found**: 确保Android SDK platform-tools已安装并在PATH中
-2. **No devices found**: 检查设备连接和USB调试设置
-3. **Permission denied**: 确保已在设备上授权此计算机
-
-## 项目结构
-
-```
-adb-mcp/
-├── src/
-│   ├── __init__.py
-│   ├── server.py          # MCP服务器主文件
-│   ├── tools/
-│   │   ├── __init__.py
-│   │   └── device_tools.py # ADB工具实现
-│   └── utils/
-│       ├── __init__.py
-│       └── adb_helper.py   # ADB命令封装
-├── requirements.txt
-├── README.md
-└── run_server.py          # 启动脚本
-```
+- **ADB not found**: 安装 Android SDK platform-tools 并添加到 PATH
+- **No devices**: 检查USB连接和调试授权
+- **Permission denied**: 在设备上授权此计算机

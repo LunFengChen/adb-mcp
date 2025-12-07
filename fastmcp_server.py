@@ -3,7 +3,7 @@
 ADB MCP Server Implementation using FastMCP
 
 This module contains the complete implementation of the ADB MCP server
-with all 19 tools for comprehensive Android device management.
+with all 40 tools for comprehensive Android device management.
 """
 
 import sys
